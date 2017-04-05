@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<?php
+
+session_start();
+require_once("twitteroauth/twitteroauth/twitteroauth.php"); //Path to twitteroauth library you downloaded in step 3
+
+$twitteruser = "fake_Student419"; //user name you want to reference
+$notweets = 4; //how many tweets you want to retrieve
+$consumerkey = "81FuvoXV89n078HMrKWFhYgo6"; //Noted keys from step 2
+$consumersecret = "9SeErmkaZJDS6doGHDvjfuOVI4xgr2Nz2gB1dfQThMa29aFu78"; //Noted keys from step 2
+$accesstoken = "849325858229813248-bsJtR3dRRqWWVJ2loU4OO5aC7SgAB54"; //Noted keys from step 2
+$accesstokensecret = "OD2QzzP0PdL5NKsshMWjDzsMWTNnVFsOmJMXWEci1GtLd"; //Noted keys from step 2
+
+function getConnectionWithAccessToken($cons_key, $cons_secret, $oauth_token, $oauth_token_secret) {
+  $connection = new TwitterOAuth($cons_key, $cons_secret, $oauth_token, $oauth_token_secret);
+  return $connection;
+}
+
+$connection = getConnectionWithAccessToken($consumerkey, $consumersecret, $accesstoken, $accesstokensecret);
+
+$tweets = $connection->get("https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=".$twitteruser."&count=".$notweets);
+
+echo json_encode($tweets);
+echo $tweets; //testing remove for production   
+?>
+
+</body>
+</html>
