@@ -1,5 +1,5 @@
 <?php
-   define('DB_SERVER', 'burrow.soic.indiana.edu');
+   define('DB_SERVER', 'db.soic.indiana.edu');
    define('DB_USERNAME', 'caps16_team46');
    define('DB_PASSWORD', 'my+sql=caps16_team46');
    define('DB_DATABASE', 'caps16_team46');
