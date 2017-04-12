@@ -11,20 +11,21 @@ if (mysqli_connect_errno())
 {
 	echo "Failed to connect to MySQL: " . mysqli_connect_error(); 
 } 
-$firstname = mysqli_real_escape_string($con,$_POST['firstname']);
-$lastname = mysqli_real_escape_string($con,$_POST['lastname']);
-$email = mysqli_real_escape_string($con,$_POST['email']);
+$options = ['cost' => 11,];
+$loginname = mysqli_real_escape_string($con,$_POST['loginname']);
+$hashword = mysqli_real_escape_string($con,$_POST['hashword']);
 
-$sql="DELETE FROM test 
-WHERE LastName = '$lastname' and FirstName = '$firstname' and Email = '$email'
-LIMIT 1
-";
+$hash = password_hash($hashword,PASSWORD_BCRYPT,$options);
+$sql="INSERT INTO hashLogin (loginname, hashword)
+VALUES ('$loginname', '$hash')";
 //check for error
 if(!mysqli_query($con,$sql))
 {
 die('Error basic code:' .mysqli_error());
 }
-echo "1 record removed";
+echo "New password added";
+
+
 
 mysqli_close($con);
 ?>
