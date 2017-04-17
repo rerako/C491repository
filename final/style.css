@@ -1,0 +1,77 @@
+@charset "utf-8";
+/* CSS Document*/
+/*Define the body element's color*/
+* {
+    box-sizing: border-box;
+}
+body {
+    background-color: #fffaf0;
+}
+.bodynav li:hover {
+    background-color: yellow;
+}
+.bodynav li {
+    padding: 10px;
+    margin-bottom: 3px;
+	text-align: center;
+    background-color: #33b5e5;
+	position: center;
+
+    color: #ffffff;
+}
+.bodynav ul {
+	text-align: center;
+	position: center;
+
+}
+.centerheader
+{ 
+	margin:
+    height: 300px;
+	text-align: center;
+    position: relative;
+	
+    border: 25px solid green; 
+}
+.bodynav
+{
+	background-color: 	#483D8B;
+    width: 25%;
+    float: left;
+    padding: 15px;
+    min-height: 500px;
+	max-width: 350px;
+}
+.bodymain
+{
+    width: 50%;
+    float: left;
+    padding: 15px;
+	position: relative;
+}
+.bodyL
+{
+	width: 60%;
+    float: left;
+	position: relative;
+	border: 1px solid red;
+	min-height: 500px;
+
+}
+.bodyR
+{
+	width: 40%;
+    float: left;
+	position: relative;
+	border: 1px solid red;
+	min-height: 500px;
+
+}
+.twitternav
+{
+    width: 25%;
+    float: left;
+    padding: 15px;
+	position: center;
+	text-align: center;
+}
