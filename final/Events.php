@@ -35,7 +35,7 @@ if($foo){
 	  echo '<form action="login.php"  method="post">';
 		echo 'Login name:<input type="text" name="username" /><br>';
 		echo 'Password:<input type="password" name="password" /><br>';
-		echo '<input type="submit"></br>';
+		echo '<input type="submit" name="log"></br>';
 	  echo '</form>';
 
    }
@@ -52,119 +52,198 @@ if($foo){
   </ul>
 </div>
 <div class="bodymain">
-
+<p>Searching: </p>
+<div class="bodyV">
 <form action=""  method="post" id="eventForm">
 Title:<input type="text" name="Etitle" size="30"  value="John"/><br>
 Date:<input type="date" name="Edate" /><br>
 Search:<input type="checkbox" name="Search"/><br>
 
-<input type="submit"></br>
+<input type="submit" name="search"></br>
 </form>
+</br>
+</div>
+
 <?php
 	// Check connection
 	if (mysqli_connect_errno()) 
 	{
 		echo "Failed to connect to MySQL: " . mysqli_connect_error(); 
 	} 
-	if(foo){
-		
-	}
-	else{
-		
-	}
-
-	if($_SERVER["REQUEST_METHOD"] == "POST") 
+	if($foo)
 	{
+		
+		$sql = "SELECT id ,title, location, eventDate, description, display FROM eventTable";
+		
 
-		$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
-		$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
-		//$Edisplay = mysqli_real_escape_string($con,$_POST['Edisplay']);
-		echo "searching for $Etitle or $Edate.";
-		$sql = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE eventDate = '$Edate' OR title = '$Etitle'";
+
 		if(!mysqli_query($con,$sql))
 		{
 		die('Error basic code:' .mysqli_error());
 		}
 
 		$result = $con->query($sql);
-
+		
 		if ($result->num_rows > 0) {
-			echo "<table border = '1'>
-			<tr>
-				<th>id</th>
-				<th>title</th>
-				<th>location</th>
-				<th>eventDate</th>
-				<th>description</th>
+			
 
-			</tr>";
 			// output data of each row
 			while($row = $result->fetch_assoc()) {
-
-				
-				echo 
-				"<tr><td>".$row["id"].
-				"</td><td>".$row["title"].
-				"</td><td>".$row["location"].
-				"</td><td>".$row["eventDate"].		
-				"</td><td>".$row["description"].
-				"</td></tr>";
-				
+				echo "<div class='bodyV'>";
+				echo "ID: '$row[id]'<br>";
+				echo "<form action=''  method='post' id='eventForm'>";
+				echo "Title:<input type='text' name='Etitle' size='30'  value='$row[title]'/><br>";
+				echo "Location:<input type='text' name='Elocate' size='30'  value='$row[location]'/><br>";
+				echo "Description:<br>";
+				echo "<textarea name='Edescript' form='eventForm'>'$row[description]'</textarea><br>";
+				echo "Display:<input type='checkbox' name='Edisplay'/><br>";
+				echo "<input type='number' name='Eid' value='$row[id]'/><br>";
+				echo "<input type='submit' name='form1'></br>";
+				echo "</div>";
+			
 			}
-			echo "</table>";
-		} else {
+		
+			
+			if(isset($_POST["form1"]))
+			{
+				if($_SERVER["REQUEST_METHOD"] == "POST") 
+				{
+					$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
+					$Elocate = mysqli_real_escape_string($con,$_POST['Elocate']);
+					$Edescript = mysqli_real_escape_string($con,$_POST['Edescript']);
+					$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
+					if(isset($_POST['Edisplay'])){
+						$Edisplay = 1;
+					}else{
+						$Edisplay = 0;
+					}
+					$Eid = mysqli_real_escape_string($con,$_POST['Eid']);
+					$sql="
+					UPDATE eventTable 
+					SET title = '$Etitle' , location = '$Elocate', eventDate = '$Edate', display = '$Edisplay', description = '$Edescript'
+					WHERE id = '$Eid'";
+					//check for error
+
+					if(!mysqli_query($con,$sql))
+					{
+					die('Error basic code:' .mysqli_error());
+					}
+					echo "Event changed";
+					
+				}
+			}
+			
+		} 
+		else 
+		{
 			echo "0 results";
 		}
-
-
 		
 	}
 	else
 	{
-		echo "searching for all.";
-		$sql = "SELECT id ,title, location, eventDate, description FROM eventTable";
-		
-
-
-		if(!mysqli_query($con,$sql))
+		if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["search"])) 
 		{
-		die('Error basic code:' .mysqli_error());
-		}
 
-		$result = $con->query($sql);
-
-		if ($result->num_rows > 0) {
-			echo "<table border = '1'>
-			<tr>
-				<th>id</th>
-				<th>title</th>
-				<th>location</th>
-				<th>eventDate</th>
-				<th>description</th>
-
-			</tr>";
-			// output data of each row
-			while($row = $result->fetch_assoc()) {
-
-				
-				echo 
-				"<tr><td>".$row["id"].
-				"</td><td>".$row["title"].
-				"</td><td>".$row["location"].
-				"</td><td>".$row["eventDate"].		
-				"</td><td>".$row["description"].
-				"</td></tr>";
-				
+			$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
+			$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
+			//$Edisplay = mysqli_real_escape_string($con,$_POST['Edisplay']);
+			echo "searching for $Etitle or $Edate.";
+			$sql = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE eventDate = '$Edate' OR title = '$Etitle'";
+			if(!mysqli_query($con,$sql))
+			{
+			die('Error basic code:' .mysqli_error());
 			}
-			echo "</table>";
-		} else {
-			echo "0 results";
-		}
 
+			$result = $con->query($sql);
+
+			if ($result->num_rows > 0) {
+				echo "<table border = '1'>
+				<tr>
+					<th>id</th>
+					<th>title</th>
+					<th>location</th>
+					<th>eventDate</th>
+					<th>description</th>
+
+				</tr>";
+				// output data of each row
+				while($row = $result->fetch_assoc()) {
+
+					
+					echo 
+					"<tr><td>".$row["id"].
+					"</td><td>".$row["title"].
+					"</td><td>".$row["location"].
+					"</td><td>".$row["eventDate"].		
+					"</td><td>".$row["description"].
+					"</td></tr>";
+					
+				}
+				echo "</table>";
+			} else {
+				echo "0 results";
+			}
+
+
+			
+		}
+		else
+		{
+			
+			$sql = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE display = 1";
+			
+
+
+			if(!mysqli_query($con,$sql))
+			{
+			die('Error basic code:' .mysqli_error());
+			}
+
+			$result = $con->query($sql);
+
+			if ($result->num_rows > 0) {
+				/*
+				echo "<table border = '1'>
+				<tr>
+					<th>id</th>
+					<th>title</th>
+					<th>location</th>
+					<th>eventDate</th>
+					<th>description</th>
+
+				</tr>";*/
+				// output data of each row
+				while($row = $result->fetch_assoc()) {
+					echo "<div class='bodyV'>";
+					echo "<p>Event Title:'$row[title]'</p>";
+					echo "<p>Date:'$row[eventDate]'</p>";
+					echo "Location: '$row[location]'</br>";
+					echo "<p>Description: </p>";
+					echo "<p>	'$row[description]'</p></br>";
+					echo "</div>";
+					/*
+					 echo
+					"<tr><td>".$row["id"].
+					"</td><td>".$row["title"].
+					"</td><td>".$row["location"].
+					"</td><td>".$row["eventDate"].		
+					"</td><td>".$row["description"].
+					"</td></tr>";
+					*/
+				}
+				echo "</table>";
+			} else {
+				echo "0 results";
+			}
+
+		}
 	}
+
+
 mysqli_close($con);
 ?>
-<p>This is a paragraph.</p>
+
 </div>
 
 <div class="twitternav">
