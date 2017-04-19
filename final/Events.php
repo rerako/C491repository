@@ -78,7 +78,6 @@ if(!isset($_SESSION['login_user'])){
 Title:<input type="text" name="Etitle" size="30"  value="John"/><br>
 Date:<input type="date" name="Edate" /><br>
 Search:<input type="checkbox" name="Search"/><br>
-
 <input type="submit" name="search"></br>
 </form>
 </br>
@@ -97,14 +96,14 @@ Search:<input type="checkbox" name="Search"/><br>
 				echo "<div class='bodyV'>";
 				echo "<h2>Create new Event:</h2>";
 				echo "<form action=''  method='post' id='addeventForm'>";
-				echo "Title:<input type='text' name='Etitle' size='30'  value='$row[title]'/><br>";
-				echo "Location:<input type='text' name='Elocate' size='30'  value='$row[location]'/><br>";
+				echo "Title:<input type='text' name='Etitle' size='30'/><br>";
+				echo "Location:<input type='text' name='Elocate' size='30'/><br>";
 				echo "Description:<br>";
-				echo "<textarea name='Edescript' form='eventForm'>".$row[description]."</textarea><br>";
+				echo "<textarea name='Edescript' form='eventForm'></textarea><br>";
 				echo "Date:<input type='date' name='Edate'/><br>";
 				echo "Display:<input type='checkbox' name='Edisplay'/><br>";
 				echo "<input type='submit' name='form4'></br>";
-				echo "</div>";
+				echo "</form></div>";
 		
 		if(isset($_POST["form4"]))
 			{
@@ -112,15 +111,31 @@ Search:<input type="checkbox" name="Search"/><br>
 				{
 					$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
 					$Elocate = mysqli_real_escape_string($con,$_POST['Elocate']);
-					$Edescript = mysqli_real_escape_string($con,$_POST['Edescript']);
+					$Edescript = $_POST['Edescript'];
 					$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
 					if(isset($_POST['Edisplay'])){
 						$Edisplay = 1;
 					}else{
 						$Edisplay = 0;
 					}
-					
-					$sql4 =" INSERT INTO eventTable (title, location, eventDate, display, description) 
+					if(empty($Etitle)){
+						$valid = false;
+						echo "no time";
+					}
+					if(empty($Elocate)){
+						$valid = false;
+						echo "no location";
+					}
+					if(empty($Edescript)){
+						$valid = false;
+						echo "no description";
+					}
+					if(empty($Edate)){
+						$valid = false;
+						echo "no date";
+					}
+					if($valid){
+					$sql4 ="INSERT INTO eventTable (title, location, eventDate, display, description) 
 					VALUES( '$Etitle' ,'$Elocate','$Edate', '$Edisplay', '$Edescript')";
 					
 					
@@ -130,9 +145,11 @@ Search:<input type="checkbox" name="Search"/><br>
 
 					if(!mysqli_query($con,$sql4))
 					{
-					die('Error basic code:' .mysqli_error());
+						die('Error basic code:' .mysqli_error());
 					}
 					echo "Event added";
+					}
+
 					
 				}
 			}
@@ -173,8 +190,8 @@ Search:<input type="checkbox" name="Search"/><br>
 				echo "Display:<input type='checkbox' name='Edisplay'/><br>";
 				echo "Delete This?:<input type='checkbox' name='Edelete'/><br>";
 				echo "<input type='number' name='Eid' value='$row[id]'/><br>";
-				echo "<input type='submit' name='form1'>Edit</br>";
-				echo "</div>";
+				echo "Edit: <input type='submit' name='form1'></br>";
+				echo "</form></div>";
 			
 			}
 		
@@ -183,15 +200,13 @@ Search:<input type="checkbox" name="Search"/><br>
 			{
 				if($_SERVER["REQUEST_METHOD"] == "POST") 
 				{
+					
+					$valid = true;
+					
 					$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
 					$Elocate = mysqli_real_escape_string($con,$_POST['Elocate']);
-					$Edescript = mysqli_real_escape_string($con,$_POST['Edescript']);
+					$Edescript = $_POST['Edescript'];
 					$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
-					if(isset($_POST['Edisplay'])){
-						$Edisplay = 1;
-					}else{
-						$Edisplay = 0;
-					}
 					if(isset($_POST['Edelete'])){
 						$Edelete = true;
 					}
@@ -200,25 +215,65 @@ Search:<input type="checkbox" name="Search"/><br>
 
 					}
 					$Eid = mysqli_real_escape_string($con,$_POST['Eid']);
-					if($Edelete)
-					{
-						$sql2="DELETE from eventTable where id = '$Eid'";
+					if(empty($Etitle)){
+						$valid = false;
+						echo "no time";
 					}
-					else{
-					$sql2 = "UPDATE eventTable 
-					SET title = '$Etitle' , location = '$Elocate', eventDate = '$Edate', display = '$Edisplay', description = '$Edescript'
-					WHERE id = '$Eid'";
+					if(empty($Elocate)){
+						$valid = false;
+						echo "no location";
 					}
-					
+					if(empty($Edescript)){
+						$valid = false;
+						echo "no description";
+					}
+					if(empty($Edate)){
+						$valid = false;
+						echo "no date";
+					}
+					if(isset($_POST['Edisplay'])){
+						$Edisplay = 1;
+					}else{
+						$Edisplay = 0;
+					}
 
-					//check for error
-
-					if(!mysqli_query($con,$sql2))
+					if($valid ||$Edelete )
 					{
-					die('Error basic code:' .mysqli_error());
+						if($Edelete)
+						{
+							$sql2="DELETE from eventTable where id = '$Eid'";
+							
+							if(!mysqli_query($con,$sql2))
+							{
+							die('Error basic code:' .mysqli_error());
+							}
+							echo "Event changed #: '$Eid'";
+						}
+						else
+						{
+								/*
+							$sql2 = "UPDATE eventTable 
+							SET title = '$Etitle' , location = '$Elocate', eventDate = '$Edate', display = '$Edisplay', description = '$Edescript'
+							WHERE id = '$Eid'";*/
+							$sql2="DELETE from eventTable where id = '$Eid'";
+							if(!mysqli_query($con,$sql2))
+							{
+							die('Error basic code:' .mysqli_error());
+							}
+							echo "Event changed #: '$Eid'";
+							$sql2 =" INSERT INTO eventTable (title, location, eventDate, display, description) 
+							VALUES( '$Etitle' ,'$Elocate','$Edate', '$Edisplay', '$Edescript')";
+							
+							if(!mysqli_query($con,$sql2))
+							{
+							die('Error basic code:' .mysqli_error());
+							}
+							echo "Event changed #: '$Eid'";
+						
+						}
+						
 					}
-					echo "Event changed #: '$Eid'";
-					
+
 				}
 			}
 
