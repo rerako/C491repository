@@ -6,6 +6,17 @@
 }
 body {
     background-color: #fffaf0;
+    background-image: url("http://cgi.soic.indiana.edu/~btung/c491/Images/gradient.JPG");
+	background-repeat: repeat-x;
+}
+.bodynav
+{
+	background-color: 	#483D8B;
+    width: 25%;
+    float: left;
+    padding: 15px;
+    min-height: 500px;
+	max-width: 350px;
 }
 .bodynav li:hover {
     background-color: yellow;
@@ -24,24 +35,35 @@ body {
 	position: center;
 
 }
+.bodytalk{
+		margin: 5px;
+	text-align: center;
+	border-style: solid ;
+	    background-color: lightgrey;
+
+}
 .centerheader
 { 
-	margin:
-    height: 300px;
+    height: 350px;
 	text-align: center;
     position: relative;
-	
-    border: 25px solid green; 
+	background-color: 	#483D8B;
+
+    border: 5px solid green; 
 }
-.bodynav
+.headernav
 {
 	background-color: 	#483D8B;
     width: 25%;
     float: left;
-    padding: 15px;
-    min-height: 500px;
-	max-width: 350px;
 }
+.headerlogin
+{
+    width: 25%;
+    float: left;
+	background-color: 	#483D8B;
+}
+
 .event
 {
     background-color: lightgrey;
@@ -56,6 +78,19 @@ body {
     float: left;
     padding: 15px;
 	position: relative;
+}
+.boxed
+{
+	background-color: lightgrey;
+	margin: 5px;
+	border-style: solid ;
+}
+.boxedicon
+{
+	background-color: lightgrey;
+	text-align: center;
+	margin: 5px;
+	border-style: solid ;
 }
 .bodyL
 {

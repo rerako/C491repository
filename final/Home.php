@@ -4,13 +4,9 @@ session_start();
 
 if(!isset($_SESSION['login_user'])){
 	//header("location:login.php");
-	echo 'logged out';
 	$foo = False;
    }
    else{
-	   	echo 'logged in?';
-		print_r($_SESSION);
-
 	   	$foo = True;
 
    }
@@ -24,26 +20,46 @@ if(!isset($_SESSION['login_user'])){
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <body>
-<div class="centerheader">
-<h1>This is a Heading</h1>
-<?php 
-// if foo = true then logged in
-//if foo = false then logged out
-if($foo){
-      echo '<a href="logout.php">Click here</a> to Logout.';
-   }
-   else{
-	  //echo '<a href="login.php">Click here</a> to login.';
-	  echo '<form action="login.php"  method="post">';
-		echo 'Login name:<input type="text" name="username" /><br>';
-		echo 'Password:<input type="password" name="password" /><br>';
-		echo '<input type="submit"></br>';
-	  echo '</form>';
 
-   }
-?>
+<div class="centerheader">
+	
+	<div class="headernav">
+		<div class="boxed">
+			<img src="http://cgi.soic.indiana.edu/~btung/c491/Images/cap1.JPG" height="95%" width="95%">
+		</div>
+	</div>
+	<div class="bodymain">
+	<div class="boxed">
+		<h1>ChickenFu!!!</h1>
+		<h2>The place that sells only so much Chicken!</h2>
+	</div>
+	</div>
+	<div class="twitternav">
+		<div class="boxed">
+			<?php 
+				// if foo = true then logged in
+				//if foo = false then logged out
+				if($foo){
+					  echo '<a href="logout.php">Click here</a> to Logout.';
+				   }
+				   else{
+					  //echo '<a href="login.php">Click here</a> to login.';
+					  echo '<form action="login.php"  method="post">';
+						echo 'Login name:<input type="text" name="username" /><br>';
+						echo 'Password:<input type="password" name="password" /><br>';
+						echo '<input type="submit"></br>';
+					  echo '</form>';
+
+				   }
+			?>
+		</div>
+	</div>
+
 </div>
 <div class="bodynav">
+<div class="boxedicon">
+<h2>Navigate:</h2>
+</div>
   <ul>
     <li><a href="http://cgi.soic.indiana.edu/~btung/c491/Home.php">Home</a></li>
     <li><a href="http://cgi.soic.indiana.edu/~btung/c491/About_us.php">About Us</a></li>
@@ -55,8 +71,10 @@ if($foo){
 </div>
 <div class="bodymain">
 
+<div class="bodytalk">
 
-<p>Welcome to Dan's Kung POW Chicken!!!</p>
+<h1>Welcome to Dan's Kung POW Chicken!!!</h1>
+</div>
 </div>
 
 <div class="twitternav">

@@ -4,13 +4,9 @@ session_start();
 //Verify login user else back to login screen
 if(!isset($_SESSION['login_user'])){
 	//header("location:login.php");
-	echo 'logged out';
 	$foo = False;
    }
    else{
-	   	echo 'logged in?';
-		print_r($_SESSION);
-
 	   	$foo = True;
 
    }
@@ -45,24 +41,46 @@ LIMIT 1");
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <body>
-<div class="centerheader">
-<h1>This is a Heading</h1>
-<?php 
-if($foo){
-      echo '<a href="logout.php">Click here</a> to Logout.';
-   }
-   else{
-	  //echo '<a href="login.php">Click here</a> to login.';
-	  echo '<form action="login.php"  method="post">';
-		echo 'Login name:<input type="text" name="username" /><br>';
-		echo 'Password:<input type="password" name="password" /><br>';
-		echo '<input type="submit"></br>';
-	  echo '</form>';
 
-   }
-?>
+<div class="centerheader">
+	
+	<div class="headernav">
+		<div class="boxed">
+			<img src="http://cgi.soic.indiana.edu/~btung/c491/Images/cap1.JPG" height="95%" width="95%">
+		</div>
+	</div>
+	<div class="bodymain">
+			<div class="boxed">
+		<h1>ChickenFu!!!</h1>
+		<h2>The place that sells only so much Chicken!</h2>
+		</div>
+	</div>
+	<div class="twitternav">
+		<div class="boxed">
+			<?php 
+				// if foo = true then logged in
+				//if foo = false then logged out
+				if($foo){
+					  echo '<a href="logout.php">Click here</a> to Logout.';
+				   }
+				   else{
+					  //echo '<a href="login.php">Click here</a> to login.';
+					  echo '<form action="login.php"  method="post">';
+						echo 'Login name:<input type="text" name="username" /><br>';
+						echo 'Password:<input type="password" name="password" /><br>';
+						echo '<input type="submit"></br>';
+					  echo '</form>';
+
+				   }
+			?>
+		</div>
+	</div>
+
 </div>
 <div class="bodynav">
+<div class="boxedicon">
+<h2>Navigate:</h2>
+</div>
   <ul>
     <li><a href="http://cgi.soic.indiana.edu/~btung/c491/Home.php">Home</a></li>
     <li><a href="http://cgi.soic.indiana.edu/~btung/c491/About_us.php">About Us</a></li>
@@ -73,8 +91,15 @@ if($foo){
   </ul>
 </div>
 <div class="bodymain">
+<div class="bodytalk">
 
+<h1>Shop Location: </h1>
+</div>
 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3093.221235770528!2d-86.53614158456968!3d39.16969097952955!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x886c66dc13b64b9d%3A0x92447861fa38dd93!2s403+N+Walnut+St%2C+Bloomington%2C+IN+47404!5e0!3m2!1sen!2sus!4v1491332142007" width= "100%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+<div class="bodytalk">
+
+<h1>Contact Us:</h1>
+</div>
 <div class="bodyL">
 <?php 
 if($foo)

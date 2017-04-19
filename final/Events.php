@@ -5,13 +5,9 @@ session_start();
 //Verify login user else back to login screen
 if(!isset($_SESSION['login_user'])){
 	//header("location:login.php");
-	echo 'logged out';
 	$foo = False;
    }
    else{
-	   	echo 'logged in?';
-		print_r($_SESSION);
-
 	   	$foo = True;
 
    }
@@ -24,24 +20,45 @@ if(!isset($_SESSION['login_user'])){
 <link rel="stylesheet" type="text/css" href="style.css">
 
 <body>
-<div class="centerheader">
-<h1>This is a Heading</h1>
-<?php 
-if($foo){
-      echo '<a href="logout.php">Click here</a> to Logout.';
-   }
-   else{
-	  //echo '<a href="login.php">Click here</a> to login.';
-	  echo '<form action="login.php"  method="post">';
-		echo 'Login name:<input type="text" name="username" /><br>';
-		echo 'Password:<input type="password" name="password" /><br>';
-		echo '<input type="submit" name="log"></br>';
-	  echo '</form>';
 
-   }
-?>
+<div class="centerheader">
+	
+	<div class="headernav">
+		<div class="boxed">
+			<img src="http://cgi.soic.indiana.edu/~btung/c491/Images/cap1.JPG" height="95%" width="95%">
+		</div>
+	</div>
+	<div class="bodymain">
+	<div class="boxed">
+		<h1>ChickenFu!!!</h1>
+		<h2>The place that sells only so much Chicken!</h2>
+	</div>	</div>
+	<div class="twitternav">
+		<div class="boxed">
+			<?php 
+				// if foo = true then logged in
+				//if foo = false then logged out
+				if($foo){
+					  echo '<a href="logout.php">Click here</a> to Logout.';
+				   }
+				   else{
+					  //echo '<a href="login.php">Click here</a> to login.';
+					  echo '<form action="login.php"  method="post">';
+						echo 'Login name:<input type="text" name="username" /><br>';
+						echo 'Password:<input type="password" name="password" /><br>';
+						echo '<input type="submit"></br>';
+					  echo '</form>';
+
+				   }
+			?>
+		</div>
+	</div>
+
 </div>
 <div class="bodynav">
+<div class="boxedicon">
+<h2>Navigate:</h2>
+</div>
   <ul>
     <li><a href="http://cgi.soic.indiana.edu/~btung/c491/Home.php">Home</a></li>
     <li><a href="http://cgi.soic.indiana.edu/~btung/c491/About_us.php">About Us</a></li>
@@ -52,7 +69,10 @@ if($foo){
   </ul>
 </div>
 <div class="bodymain">
-<p>Searching: </p>
+<div class="bodytalk">
+
+<h1>Events:</h1>
+</div>
 <div class="bodyV">
 <form action=""  method="post" id="eventForm">
 Title:<input type="text" name="Etitle" size="30"  value="John"/><br>
@@ -73,6 +93,60 @@ Search:<input type="checkbox" name="Search"/><br>
 	if($foo)
 	{
 		
+		//add event HERE
+				echo "<div class='bodyV'>";
+				echo "<h2>Create new Event:</h2>";
+				echo "<form action=''  method='post' id='addeventForm'>";
+				echo "Title:<input type='text' name='Etitle' size='30'  value='$row[title]'/><br>";
+				echo "Location:<input type='text' name='Elocate' size='30'  value='$row[location]'/><br>";
+				echo "Description:<br>";
+				echo "<textarea name='Edescript' form='eventForm'>".$row[description]."</textarea><br>";
+				echo "Date:<input type='date' name='Edate'/><br>";
+				echo "Display:<input type='checkbox' name='Edisplay'/><br>";
+				echo "<input type='submit' name='form4'></br>";
+				echo "</div>";
+		
+		if(isset($_POST["form4"]))
+			{
+				if($_SERVER["REQUEST_METHOD"] == "POST") 
+				{
+					$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
+					$Elocate = mysqli_real_escape_string($con,$_POST['Elocate']);
+					$Edescript = mysqli_real_escape_string($con,$_POST['Edescript']);
+					$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
+					if(isset($_POST['Edisplay'])){
+						$Edisplay = 1;
+					}else{
+						$Edisplay = 0;
+					}
+					
+					$sql4 =" INSERT INTO eventTable (title, location, eventDate, display, description) 
+					VALUES( '$Etitle' ,'$Elocate','$Edate', '$Edisplay', '$Edescript')";
+					
+					
+					
+
+					//check for error
+
+					if(!mysqli_query($con,$sql4))
+					{
+					die('Error basic code:' .mysqli_error());
+					}
+					echo "Event added";
+					
+				}
+			}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		$sql = "SELECT id ,title, location, eventDate, description, display FROM eventTable";
 		
 
@@ -84,21 +158,22 @@ Search:<input type="checkbox" name="Search"/><br>
 
 		$result = $con->query($sql);
 		
-		if ($result->num_rows > 0) {
-			
-
+		if ($result->num_rows > 0) 
+		{
 			// output data of each row
 			while($row = $result->fetch_assoc()) {
 				echo "<div class='bodyV'>";
-				echo "ID: '$row[id]'<br>";
+				echo "ID: ".$row[id]."<br>";
 				echo "<form action=''  method='post' id='eventForm'>";
 				echo "Title:<input type='text' name='Etitle' size='30'  value='$row[title]'/><br>";
 				echo "Location:<input type='text' name='Elocate' size='30'  value='$row[location]'/><br>";
 				echo "Description:<br>";
-				echo "<textarea name='Edescript' form='eventForm'>'$row[description]'</textarea><br>";
+				echo "<textarea name='Edescript' form='eventForm'>".$row[description]."</textarea><br>";
+				echo "Date:<input type='date' name='Edate'/><br>";
 				echo "Display:<input type='checkbox' name='Edisplay'/><br>";
+				echo "Delete This?:<input type='checkbox' name='Edelete'/><br>";
 				echo "<input type='number' name='Eid' value='$row[id]'/><br>";
-				echo "<input type='submit' name='form1'></br>";
+				echo "<input type='submit' name='form1'>Edit</br>";
 				echo "</div>";
 			
 			}
@@ -117,22 +192,36 @@ Search:<input type="checkbox" name="Search"/><br>
 					}else{
 						$Edisplay = 0;
 					}
+					if(isset($_POST['Edelete'])){
+						$Edelete = true;
+					}
+					else{
+						$Edelete = false;
+
+					}
 					$Eid = mysqli_real_escape_string($con,$_POST['Eid']);
-					$sql="
-					UPDATE eventTable 
+					if($Edelete)
+					{
+						$sql2="DELETE from eventTable where id = '$Eid'";
+					}
+					else{
+					$sql2 = "UPDATE eventTable 
 					SET title = '$Etitle' , location = '$Elocate', eventDate = '$Edate', display = '$Edisplay', description = '$Edescript'
 					WHERE id = '$Eid'";
+					}
+					
+
 					//check for error
 
-					if(!mysqli_query($con,$sql))
+					if(!mysqli_query($con,$sql2))
 					{
 					die('Error basic code:' .mysqli_error());
 					}
-					echo "Event changed";
+					echo "Event changed #: '$Eid'";
 					
 				}
 			}
-			
+
 		} 
 		else 
 		{
@@ -142,42 +231,36 @@ Search:<input type="checkbox" name="Search"/><br>
 	}
 	else
 	{
-		if($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["search"])) 
+		if(isset($_POST["search"]) && $_SERVER["REQUEST_METHOD"] == "POST") 
 		{
 
 			$Etitle = mysqli_real_escape_string($con,$_POST['Etitle']);
 			$Edate = mysqli_real_escape_string($con,$_POST['Edate']);
 			//$Edisplay = mysqli_real_escape_string($con,$_POST['Edisplay']);
 			echo "searching for $Etitle or $Edate.";
-			$sql = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE eventDate = '$Edate' OR title = '$Etitle'";
-			if(!mysqli_query($con,$sql))
+			$sql3 = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE (eventDate = '$Edate' OR title = '$Etitle') AND display = 1";
+			if(!mysqli_query($con,$sql3))
 			{
 			die('Error basic code:' .mysqli_error());
 			}
 
-			$result = $con->query($sql);
+			$result = $con->query($sql3);
 
 			if ($result->num_rows > 0) {
-				echo "<table border = '1'>
-				<tr>
-					<th>id</th>
-					<th>title</th>
-					<th>location</th>
-					<th>eventDate</th>
-					<th>description</th>
-
-				</tr>";
 				// output data of each row
 				while($row = $result->fetch_assoc()) {
-
-					
-					echo 
-					"<tr><td>".$row["id"].
-					"</td><td>".$row["title"].
-					"</td><td>".$row["location"].
-					"</td><td>".$row["eventDate"].		
-					"</td><td>".$row["description"].
-					"</td></tr>";
+					echo "<div class='bodyV'>";
+					echo "Event#: ".$row[id]."";
+					echo "<div class='boxed'>";
+					echo "<h1> Event Title: " .$row['title']. "</h1>";
+					echo "</div>";
+					echo "Location: '$row[location]' </br>";
+					echo "Date: '$row[eventDate]'</br>";
+					echo "<div class='boxed'>";
+					echo "<h3> Event Description: </h3>";
+					echo "".$row[description]."</br>";
+					echo "</div>";
+					echo "</div>";
 					
 				}
 				echo "</table>";
@@ -191,16 +274,16 @@ Search:<input type="checkbox" name="Search"/><br>
 		else
 		{
 			
-			$sql = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE display = 1";
+			$sql3 = "SELECT id ,title, location, eventDate, description FROM eventTable WHERE display = 1";
 			
 
 
-			if(!mysqli_query($con,$sql))
+			if(!mysqli_query($con,$sql3))
 			{
 			die('Error basic code:' .mysqli_error());
 			}
 
-			$result = $con->query($sql);
+			$result = $con->query($sql3);
 
 			if ($result->num_rows > 0) {
 				/*
