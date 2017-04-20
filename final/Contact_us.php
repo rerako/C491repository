@@ -128,9 +128,9 @@ if($foo)
 		{
 			if($_SERVER["REQUEST_METHOD"] == "POST") 
 			{
-				$firstname = mysqli_real_escape_string($con,$_POST['firstname']);
-				$lastname = mysqli_real_escape_string($con,$_POST['lastname']);
-				$email = mysqli_real_escape_string($con,$_POST['email']);
+				$firstname = mysqli_real_escape_string($con,test_input($_POST['firstname']));
+				$lastname = mysqli_real_escape_string($con,test_input($_POST['lastname']));
+				$email = mysqli_real_escape_string($con,test_input($_POST['email']));
 				$sql = "SELECT LastName, FirstName, Email, DOB FROM vipList WHERE LastName = '$lastname' OR FirstName = '$firstname' OR Email = '$email'";
 				
 			}
@@ -173,10 +173,10 @@ if($foo)
 			if($_SERVER["REQUEST_METHOD"] == "POST") 
 			{
 				$valid = True;
-				$lastname = mysqli_real_escape_string($con,$_POST['lastname']);
-				$firstname = mysqli_real_escape_string($con,$_POST['firstname']);
-				$email = mysqli_real_escape_string($con,$_POST['email']);
-				$DOB = mysqli_real_escape_string($con,$_POST['DOB']);
+				$lastname = mysqli_real_escape_string($con,test_input($_POST['lastname']));
+				$firstname = mysqli_real_escape_string($con,test_input($_POST['firstname']));
+				$email = mysqli_real_escape_string($con,test_input($_POST['email']));
+				$DOB = mysqli_real_escape_string($con,test_input($_POST['DOB']));
 				
 				if (empty($firstname)) {
 					$nameErr = "Name is required ";
@@ -223,7 +223,13 @@ if($foo)
 					}
 					
 			  }
-			  
+			  if(empty($DOB))
+			  {
+				  	$valid = False;
+
+					$DOBErr = "Date of Birth is required ";
+				  
+			  }
 			if($valid)
 			  {
 				if (mysqli_connect_errno()) 
@@ -246,7 +252,7 @@ if($foo)
 					echo "FirstName: '$nameErr'";
 					echo "LastName: '$LnameErr'";
 					echo "Email: '$emailErr'";
-
+					echo "DOBErr: '$DOBErr'";
 			  }
 
 
@@ -260,53 +266,96 @@ if($foo)
 <div class="bodyR">
 <p>Leave a Message:</p>
 <form action=""  method="post" id="messageForm">
-Email:<input type="email" name="email">
+Email:<input type="email" name="email" placeholder="...@indiana.edu">
 <br>Message:<br>
-<textarea name="message" form="messageForm">Enter text here...</textarea><br>
+<textarea name="message" form="messageForm" placeholder="Enter text here..."></textarea><br>
 <input type="submit" name="form2"></br>
 </form>
 <?php 
 include("Config.php");
-if(isset($_POST["form2"]))
-{
-	if($_SERVER["REQUEST_METHOD"] == "POST") 
+
+	if(isset($_POST["form2"]))
 	{
-		$valid = True;
-		$email = mysqli_real_escape_string($con,$_POST['email']);
-		$message = mysqli_real_escape_string($con,$_POST['message']);
-		if (empty($email)) 
+		if($_SERVER["REQUEST_METHOD"] == "POST") 
 		{
-					$valid = False;
-
-					$emailErr = "Email is required! ";
-		} 
-		if (empty($message)) 
-		{
-					$valid = False;
-					$messageErr = "No message typed! ";
-		}  
-		if($valid)	  
-		{
-			$sql="INSERT INTO messageTable (email, message)
-			VALUES ('$email', '$message')";
-			//check for error
-
-			if(!mysqli_query($con,$sql))
+			$valid = True;
+			$email = mysqli_real_escape_string($con,test_input($_POST['email']));
+			$message = mysqli_real_escape_string($con,test_input($_POST['message']));
+			if (empty($email)) 
 			{
-			die('Error basic code:' .mysqli_error());
+						$valid = False;
+
+						$emailErr = "Email is required! ";
+			} 
+			else 
+			{
+				// check if e-mail address is well-formed
+				if (!filter_var($email, FILTER_VALIDATE_EMAIL)) 
+				{
+					$emailErr = "Invalid email format"; 
+					$valid = False;
+
+				}
+					
 			}
-			echo "Message Sent";
+			if (empty($message)) 
+			{
+						$valid = False;
+						$messageErr = "No message typed! ";
+			}
+					
+			if($valid)	  
+			{
+				$sql="INSERT INTO messageTable (email, message)
+				VALUES ('$email', '$message')";
+				//check for error
+
+				if(!mysqli_query($con,$sql))
+				{
+				die('Error basic code:' .mysqli_error());
+				}
+				echo "Message Sent";
+
+			}
+			else
+			{
+				echo "Email: '$emailErr'";
+				echo "Message: '$messageErr'";
+			}
+
 
 		}
-		else
-		{
-			echo "Email: '$emailErr'";
-			echo "Message: '$LnameErr'";
-		}
-
-
 	}
+
+if($foo){
+	$sql = "SELECT email, message FROM messageTable";
+			
+	$result = $con->query($sql);
+	if ($result->num_rows > 0) 
+	{
+		echo "<table border = '1'>
+		<tr>
+			<th>email</th>
+			<th>message</th>
+
+		</tr>";
+		// output data of each row
+		while($row = $result->fetch_assoc()) {
+			echo 
+			"<tr><td>".$row["email"].
+			"</td><td>".$row["message"].
+			"</td></tr>";
+		}
+		echo "</table>";
+	} 
+	else 
+	{
+		echo "0 results";
+	}
+	
 }
+	mysqli_close($con);
+
 ?>
 </div>
 </div>

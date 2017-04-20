@@ -11,8 +11,8 @@ function test_input($data) {
 if($_SERVER["REQUEST_METHOD"] == "POST") 
 {
       // username and password sent from form 
-	  $myusername = mysqli_real_escape_string($con,$_POST['username']);
-      $mypassword = mysqli_real_escape_string($con,$_POST['password']); 
+	  $myusername = mysqli_real_escape_string($con,test_input($_POST['username']));
+      $mypassword = mysqli_real_escape_string($con,test_input($_POST['password'])); 
       $sql = "SELECT hashword FROM hashLogin 
 		WHERE loginname = '$myusername'";
       $result = mysqli_query($con,$sql);
